@@ -1,0 +1,37 @@
+version: '3'
+services:
+  httpd-rt4:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: 'pni-apache.Dockerfile'
+    networks:
+      - proxy
+      - default
+    volumes:
+      - './sites:/usr/local/apache2/conf/sites/:ro'
+    #  - '/etc/pki:/etc/pki:ro' ## this seems to be missing in the apache image!?
+    # ports:
+    #   - 8888:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rt4-http.entrypoints=http"
+      - "traefik.http.routers.rt4-https.entrypoints=https"
+      - "traefik.http.routers.rt4-https.tls=true"
+      - "traefik.http.routers.rt4-https.tls.certresolver=letsencrypt-resolver"
+      - "traefik.http.routers.rt4-http.middlewares=rt4-redirectscheme@docker"
+      - "traefik.http.routers.rt4-http.rule=Host(`${SERVICEHOSTNAME}`)"
+      - "traefik.http.routers.rt4-https.rule=Host(`${SERVICEHOSTNAME}`)"
+      - "traefik.http.middlewares.rt4-redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.rt4-redirectscheme.redirectscheme.permanent=true"
+      - "traefik.http.services.rt4.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+
+
+
+
+
+networks:
+  proxy:
+    external: true
