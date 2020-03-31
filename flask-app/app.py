@@ -5,8 +5,8 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def hello_whale():
-    return request.environ["REMOTE_USER"] + ", Hello there!"
+def hello():
+    return request.environ["HTTP_X_REMOTE_USER"] + ", Hello there!"
 
 
 if __name__ == "__main__":
