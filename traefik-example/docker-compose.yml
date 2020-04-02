@@ -1,0 +1,22 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: "traefik:v2.1"
+    container_name: "traefik"
+    networks:
+      - proxy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8888:8080"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./opt:/etc/traefik:ro"
+    restart: always
+
+networks:
+  proxy:
+    external: true

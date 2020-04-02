@@ -24,7 +24,6 @@ services:
       - "traefik.http.middlewares.apachedemo-redirectscheme.redirectscheme.permanent=true"
       - "traefik.http.services.apachedemo.loadbalancer.server.port=80"
       - "traefik.docker.network=proxy"
-
   flask-root:
     env_file:
       - .env
